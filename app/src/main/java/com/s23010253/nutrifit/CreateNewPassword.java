@@ -15,7 +15,7 @@ public class CreateNewPassword extends AppCompatActivity {
 
         Button btnGetStarted = findViewById(R.id.SetBtn);
         btnGetStarted.setOnClickListener(v ->
-                startActivity(new Intent(CreateNewPassword.this, LoginActivity.class))
+                startActivity(new Intent(CreateNewPassword.this, SuccessfulActivity.class))
         );
     }
 }

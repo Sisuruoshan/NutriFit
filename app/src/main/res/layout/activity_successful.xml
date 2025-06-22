@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/loginbc"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- NutriFit Logo -->
+        <ImageView
+            android:id="@+id/logoImage"
+            android:layout_width="276dp"
+            android:layout_height="244dp"
+            android:layout_marginTop="40dp"
+            android:contentDescription="NutriFit Logo"
+            android:src="@drawable/nutrifit_logo" />
+
+        <!-- Reset Password Title -->
+
+        <!-- Subtitle -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:gravity="center"
+            android:text="Password Reset Successfully"
+            android:textColor="#576C1D"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="322dp"
+            android:layout_height="72dp"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:text="Your password has been updated
+successfully. You can now sign in with your
+new password."
+            android:textAlignment="center"
+            android:textColor="#FBEFE9"
+            android:textSize="16sp" />
+
+
+
+        <Button
+            android:id="@+id/ContinueTOSIgnUpBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#6E8415"
+            android:text="Continue to Sign In"
+            android:textColor="@android:color/white"
+            app:cornerRadius="10dp" />
+
+        <TextView
+            android:layout_width="322dp"
+            android:layout_height="72dp"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:text="For security, you'll be signed out of all
+devices."
+            android:textAlignment="center"
+            android:textColor="#D1C4BD"
+            android:textSize="16sp" />
+
+
+
+    </LinearLayout>
+</ScrollView>
+

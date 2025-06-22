@@ -28,6 +28,8 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(v -> {
             String email = emailField.getText().toString();
             String password = passwordField.getText().toString();
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
 
             Toast.makeText(this, "Login clicked: " + email, Toast.LENGTH_SHORT).show();
         });

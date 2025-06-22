@@ -1,0 +1,7 @@
+<resources>
+    <style name="GreenSpinnerText" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+        <item name="android:textColor">#4CAF50</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+</resources>
+

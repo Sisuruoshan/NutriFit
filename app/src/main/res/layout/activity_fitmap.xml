@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1a1a2e"
+    tools:context=".MainActivity">
+
+    <!-- Header with Location and FitMap -->
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_marginTop="14dp">
+
+        <TextView
+            android:id="@+id/headerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:letterSpacing="0.1"
+            android:text="LOCATION"
+            android:textColor="#6D8315"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- Scan Food Button -->
+        <LinearLayout
+            android:id="@+id/scanButtonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:layout_below="@id/headerTitle"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/button_background_dark"
+
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/green_circle"
+                android:backgroundTint="#6D8315" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="FitMap"
+                android:textColor="#FFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/green_circle"
+                android:backgroundTint="#6D8315" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/search_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_layout"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_map"
+        android:hint="Enter a location"
+        android:inputType="text"
+        android:padding="12dp"
+        android:textColor="#493D3D"
+        android:textColorHint="#CCCCCC"
+        android:textSize="14sp" />
+
+
+    <!-- Search description -->
+    <TextView
+        android:id="@+id/search_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_layout"
+        android:text="Find Supplement Store gyms and fitness centers..."
+        android:textColor="#CCCCCC"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="65dp"/>
+
+    <!-- Filter buttons -->
+    <HorizontalScrollView
+        android:id="@+id/filter_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_description"
+        android:scrollbars="none"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp">
+
+            <Button
+                android:id="@+id/btn_all"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#6D8315"
+                android:minWidth="60dp"
+                android:text="All"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btn_supplement_store"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#6D8315"
+                android:minWidth="60dp"
+                android:text="Supplement Store"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btn_gyms"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:text="Gyms"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#6D8315"
+                android:layout_marginEnd="8dp"
+                android:minWidth="60dp"
+                android:textSize="12sp"/>
+
+            <Button
+                android:id="@+id/btn_fitness_center"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#6D8315"
+                android:minWidth="60dp"
+                android:text="Fitness Center"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btn_supermarket"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:text="Supermarket"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#6D8315"
+                android:minWidth="60dp"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Map Container -->
+    <FrameLayout
+        android:id="@+id/map_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/filter_scroll"
+        android:layout_above="@id/search_button"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_map">
+
+        <fragment
+            android:id="@+id/map1"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+    <!-- Search Button -->
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_above="@id/bottom_navigation"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+
+        android:backgroundTint="#6D8315"
+        android:letterSpacing="0.1"
+        android:shadowColor="#6A4141"
+        android:text="SEARCH"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:iconTint="#471E1E"
+        app:rippleColor="#BAD154"
+        app:strokeColor="#351212" />
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/bottom_navigation"
+        android:paddingVertical="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="#1E1E2C"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/navHome"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="#0f0f1a"
+            android:backgroundTint="#1E1E2C"
+            android:padding="4dp"
+            android:src="@drawable/ic_home"
+            android:tint="#777777" />
+
+        <ImageView
+            android:id="@+id/navLocation"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:padding="4dp"
+            android:src="@drawable/ic_location"
+            android:tint="#76FF03" />
+
+        <ImageView
+            android:id="@+id/navProfile"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:padding="4dp"
+            android:src="@drawable/ic_profile"
+            android:tint="#777777" />
+
+        <ImageView
+            android:id="@+id/navScan"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:padding="4dp"
+            android:src="@drawable/ic_scan"
+            android:tint="#777777" />
+
+        <ImageView
+            android:id="@+id/navSetting"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:padding="4dp"
+            android:src="@drawable/ic_settings"
+            android:tint="#777777" />
+
+    </LinearLayout>
+
+</RelativeLayout>

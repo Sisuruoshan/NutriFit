@@ -75,7 +75,7 @@
         android:id="@+id/btnGetStarted"
         android:layout_width="238dp"
         android:layout_height="65dp"
-        android:backgroundTint="#697C3B"
+        android:backgroundTint="#6D8315"
         android:text="Get Started"
         android:textColor="#081200"
         android:textStyle="bold"
