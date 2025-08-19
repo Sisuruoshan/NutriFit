@@ -56,17 +56,24 @@ public class ScanActivity extends AppCompatActivity {
 
     private Bitmap lastCapturedBitmap; // Store last captured image
 
-    private static final String GOOGLE_CLOUD_VISION_API_KEY = "AIzaSyB0FaPLG9RoxV6IuDKZAawRz68hSn8HIfk";
-    private static final String GOOGLE_CLOUD_VISION_URL = "https://vision.googleapis.com/v1/images:annotate?key=" + GOOGLE_CLOUD_VISION_API_KEY;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scan_activity);
 
+        // Enable immersive full screen mode
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+
         initializeViews();
         setupClickListeners();
         checkCameraPermission();
+        setupBottomNavigation();
     }
 
     private void initializeViews() {
@@ -177,167 +184,11 @@ public class ScanActivity extends AppCompatActivity {
 
     private void processImage(Bitmap bitmap) {
         proTipText.setText("Analyzing image...");
-        new GoogleVisionRecognitionTask().execute(bitmap);
+        // Randomly select a food name from the mock database
+        String randomFood = foodItems.get(new Random().nextInt(foodItems.size()));
+        displayResult(randomFood, bitmap);
     }
 
-    private class GoogleVisionRecognitionTask extends AsyncTask<Bitmap, Void, String[]> {
-        @Override
-        protected String[] doInBackground(Bitmap... bitmaps) {
-            HttpURLConnection conn = null;
-            try {
-                Bitmap bitmap = bitmaps[0];
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
-                byte[] imageBytes = baos.toByteArray();
-                String base64Image = android.util.Base64.encodeToString(imageBytes, android.util.Base64.NO_WRAP);
-
-                JSONObject image = new JSONObject();
-                image.put("content", base64Image);
-
-                JSONObject feature = new JSONObject();
-                feature.put("type", "LABEL_DETECTION");
-                feature.put("maxResults", 8);
-
-                JSONObject request = new JSONObject();
-                request.put("image", image);
-                request.put("features", new org.json.JSONArray().put(feature));
-
-                JSONObject postData = new JSONObject();
-                postData.put("requests", new org.json.JSONArray().put(request));
-
-                URL url = new URL(GOOGLE_CLOUD_VISION_URL);
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                conn.setDoOutput(true);
-                OutputStream os = conn.getOutputStream();
-                os.write(postData.toString().getBytes());
-                os.flush();
-                os.close();
-
-                int responseCode = conn.getResponseCode();
-                if (responseCode == 200) {
-                    java.util.Scanner s = new java.util.Scanner(conn.getInputStream()).useDelimiter("\\A");
-                    String response = s.hasNext() ? s.next() : "";
-                    JSONObject responseJson = new JSONObject(response);
-                    JSONArray responses = responseJson.optJSONArray("responses");
-                    if (responses != null && responses.length() > 0) {
-                        JSONArray labels = responses.getJSONObject(0).optJSONArray("labelAnnotations");
-                        if (labels != null && labels.length() > 0) {
-                            String[] labelArr = new String[labels.length()];
-                            for (int i = 0; i < labels.length(); i++) {
-                                labelArr[i] = labels.getJSONObject(i).getString("description");
-                            }
-                            return labelArr;
-                        }
-                    }
-                } else {
-                    // Read error stream and show error message
-                    String errorMsg = "";
-                    try {
-                        java.util.Scanner s = new java.util.Scanner(conn.getErrorStream()).useDelimiter("\\A");
-                        errorMsg = s.hasNext() ? s.next() : "";
-                    } catch (Exception ex) {}
-                    final String msg = "Vision API error: " + responseCode + "\n" + errorMsg;
-                    runOnUiThread(() -> Toast.makeText(ScanActivity.this, msg, Toast.LENGTH_LONG).show());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                final String msg = "Exception: " + e.getMessage();
-                runOnUiThread(() -> Toast.makeText(ScanActivity.this, msg, Toast.LENGTH_LONG).show());
-            } finally {
-                if (conn != null) conn.disconnect();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String[] labels) {
-            if (labels != null && labels.length > 0) {
-                // Try to match any label to the nutrition database (singular/plural, case-insensitive)
-                for (String label : labels) {
-                    String normalized = capitalizeWords(label.trim());
-                    if (nutritionDatabaseHasFood(normalized)) {
-                        displayResult(normalized, lastCapturedBitmap);
-                        return;
-                    }
-                    // Try singular/plural
-                    String singular = toSingular(normalized);
-                    String plural = toPlural(normalized);
-                    if (nutritionDatabaseHasFood(singular)) {
-                        displayResult(singular, lastCapturedBitmap);
-                        return;
-                    }
-                    if (nutritionDatabaseHasFood(plural)) {
-                        displayResult(plural, lastCapturedBitmap);
-                        return;
-                    }
-                }
-                // If no match, show dialog to pick or enter manually
-                showLabelChoiceDialog(labels);
-            } else {
-                Toast.makeText(ScanActivity.this, "Could not recognize food. Try again.", Toast.LENGTH_SHORT).show();
-                proTipText.setText("Recognition failed. Try again or use manual entry.");
-            }
-        }
-    }
-
-    private void showLabelChoiceDialog(String[] labels) {
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("Select Food or Enter Manually");
-        builder.setItems(labels, (dialog, which) -> {
-            String chosen = capitalizeWords(labels[which].trim());
-            openNutritionAnalysis(chosen, lastCapturedBitmap);
-        });
-        builder.setNegativeButton("Manual Entry", (dialog, which) -> showManualEntryDialog());
-        builder.show();
-    }
-
-    private String toSingular(String word) {
-        if (word.endsWith("es")) return word.substring(0, word.length() - 2);
-        if (word.endsWith("s")) return word.substring(0, word.length() - 1);
-        return word;
-    }
-    private String toPlural(String word) {
-        if (!word.endsWith("s")) return word + "s";
-        return word;
-    }
-
-    private boolean nutritionDatabaseHasFood(String foodName) {
-        // Check against the NutritionAnalysisActivity database
-        // For simplicity, check a few common variants
-        try {
-            java.lang.reflect.Field dbField = Class.forName("com.s23010253.nutrifit.NutritionAnalysisActivity").getDeclaredField("nutritionDatabase");
-            dbField.setAccessible(true);
-            Object db = dbField.get(null);
-            if (db instanceof Map) {
-                Map map = (Map) db;
-                return map.containsKey(foodName);
-            }
-        } catch (Exception e) {
-            // Fallback: try common foods
-            String[] foods = {"Apple","Banana","Orange","Grilled Chicken Breast","Bread","Milk","Rice","Pasta","Pizza","Sandwich","Salad","Burger","Fish","Vegetables","Cheese","Yogurt","Eggs","Cereal","Soup","Steak","Chicken","Egg","Beef","Pork","Lamb","Turkey","Duck","Salmon","Tuna","Shrimp","Crab","Lobster","Cod","Tilapia","Sardine","Mackerel","Trout","Ham","Bacon","Sausage","Duck Egg","Quail Egg","Goose Egg","Tofu","Tempeh","Seitan","Paneer","Mozzarella","Parmesan","Cheddar","Feta","Cottage Cheese","Ricotta","Swiss Cheese","Brie","Camembert","Gouda","Edam","Emmental","Blue Cheese","Goat Cheese","Provolone","Manchego","Halloumi","Mascarpone","Cream Cheese"};
-            for (String f : foods) {
-                if (f.equalsIgnoreCase(foodName)) return true;
-            }
-        }
-        return false;
-    }
-
-    private String capitalizeWords(String input) {
-        String[] words = input.split(" ");
-        StringBuilder sb = new StringBuilder();
-        for (String word : words) {
-            if (word.length() > 0) {
-                sb.append(Character.toUpperCase(word.charAt(0)));
-                if (word.length() > 1) sb.append(word.substring(1).toLowerCase());
-                sb.append(" ");
-            }
-        }
-        return sb.toString().trim();
-    }
-
-    // Overload displayResult to accept bitmap
     private void displayResult(String foodName, Bitmap imageBitmap) {
         resultText.setVisibility(View.VISIBLE);
         resultText.setText("Detected: " + foodName);
@@ -365,7 +216,28 @@ public class ScanActivity extends AppCompatActivity {
         Intent intent = new Intent(this, NutritionAnalysisActivity.class);
         intent.putExtra("detected_food", foodName);
         intent.putExtra("confidence", 85 + new Random().nextInt(15)); // Random confidence 85-99%
+        // Pass a food image resource name as extra for manual entry
+        intent.putExtra("food_image_name", foodName);
         startActivity(intent);
+    }
+
+    private void setupBottomNavigation() {
+        findViewById(R.id.navHome).setOnClickListener(v -> {
+            startActivity(new Intent(this, HomeActivity.class));
+            overridePendingTransition(0, 0);
+        });
+        findViewById(R.id.navLocation).setOnClickListener(v -> {
+            startActivity(new Intent(this, FitMapActivity.class));
+            overridePendingTransition(0, 0);
+        });
+        findViewById(R.id.navProfile).setOnClickListener(v -> {
+            startActivity(new Intent(this, ProfileActivity.class));
+            overridePendingTransition(0, 0);
+        });
+        findViewById(R.id.navSetting).setOnClickListener(v -> {
+            startActivity(new Intent(this, ProfileSetupActivity.class));
+            overridePendingTransition(0, 0);
+        });
     }
 
     @Override

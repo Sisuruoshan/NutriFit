@@ -1,5 +1,7 @@
 plugins {
-    alias(libs.plugins.android.application)
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")
 }
 
 android {
@@ -29,6 +31,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
 
 dependencies {
@@ -51,5 +56,4 @@ dependencies {
     implementation ("com.google.android.gms:play-services-location:21.0.1")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("com.google.code.gson:gson:2.10.1")
-
 }

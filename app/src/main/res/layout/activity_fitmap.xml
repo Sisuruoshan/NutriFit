@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:paddingBottom="16dp"
         android:layout_marginTop="14dp">
 
         <TextView
@@ -74,11 +74,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/header_layout"
         android:layout_margin="16dp"
-        android:background="@drawable/rounded_map"
+        android:background="@drawable/rounded_input"
         android:hint="Enter a location"
         android:inputType="text"
         android:padding="12dp"
-        android:textColor="#493D3D"
+        android:textColor="#000000"
         android:textColorHint="#CCCCCC"
         android:textSize="14sp" />
 
@@ -138,12 +138,12 @@
                 android:id="@+id/btn_gyms"
                 android:layout_width="wrap_content"
                 android:layout_height="45dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#6D8315"
+                android:minWidth="60dp"
                 android:text="Gyms"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#6D8315"
-                android:layout_marginEnd="8dp"
-                android:minWidth="60dp"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
             <Button
                 android:id="@+id/btn_fitness_center"

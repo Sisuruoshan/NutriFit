@@ -12,4 +12,6 @@
         <item>Very Active</item>
         <item>Super Active</item>
     </string-array>
+    <string name="profile_picture">Profile picture</string>
+    <string name="edit_username">Edit username</string>
 </resources>

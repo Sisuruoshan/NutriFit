@@ -54,23 +54,23 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".ResetPassword"
             android:exported="true">
         </activity>
         <activity android:name=".CreateAccount"
             android:exported="true"
-            ></activity>
+            />
     <activity android:name=".CreateNewPassword"
         android:exported="true"
-        ></activity>
+        />
         <activity android:name=".VerifiyPassword"
             android:exported="true"
-            ></activity>
+            />
         <activity android:name=".HomeActivity"
             android:exported="true"
-            ></activity>
+            />
         <activity android:name=".FitMapActivity"
             android:exported="true"
             android:label="Map"
@@ -91,7 +91,8 @@
             android:exported="true" />
         <activity android:name=".SuccessfulActivity"
             android:exported="true" />
-
+        <activity android:name=".ProfileActivity"
+            android:exported="true" />
     </application>
 
 

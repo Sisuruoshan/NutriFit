@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:src="@drawable/background3"
+        android:contentDescription="@null"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <ScrollView
+        android:id="@+id/profileScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNav"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Profile Header -->
+            <TextView
+                android:id="@+id/headerTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="15dp"
+                android:letterSpacing="0.1"
+                android:text="PROFILE"
+                android:textColor="#6D8315"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- Profile Avatar and Info -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/profileImageCard"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="#4CAF50"
+                    app:cardCornerRadius="40dp"
+                    app:cardElevation="8dp">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/profileImageView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@string/profile_picture"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_profile" />
+
+                        <ImageView
+                            android:id="@+id/editProfileImageIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="bottom|end"
+                            android:layout_margin="4dp"
+                            android:contentDescription="@string/edit_username"
+                            android:src="@drawable/ic_edit"
+                            android:tint="#6D8315" />
+                    </FrameLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/usernameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="User Name"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/editUsernameIcon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:clickable="true"
+                        android:contentDescription="@string/edit_username"
+                        android:focusable="true"
+                        android:src="@drawable/ic_edit"
+                        app:tint="#6D8315" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/goalTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="Goal: Muscle Gain"
+                    android:textColor="#B0BEC5"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/activityTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:text="Moderately Active"
+                    android:textColor="#B0BEC5"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <!-- Stats Cards -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/stat_card"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/weightTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="75kg"
+                            android:textColor="@android:color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Weight"
+                            android:textColor="#B0BEC5"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="#2A2A2A"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/stat_card"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/heightTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="175cm"
+                            android:textColor="@android:color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Height"
+                            android:textColor="#B0BEC5"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="#2A2A2A"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/stat_card"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="BMI"
+                            android:textColor="#B0BEC5"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/bmiTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="24.5"
+                            android:textColor="@android:color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/bmiStatusTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Healthy"
+                            android:textColor="#4CAF50"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- Goals Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#1E1E1E"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/stat_card"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Daily Protein Goal -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Daily Protein Goal"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/proteinGoalTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="120g"
+                            android:textColor="#4CAF50"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <!-- Daily Calorie Goal -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Daily Calorie Goal"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/calorieGoalTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2,100"
+                            android:textColor="#4CAF50"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <!-- Water Goal -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Water Goal"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/waterGoalTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="3L"
+                            android:textColor="#4CAF50"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <!-- Notifications -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Notifications"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+
+                        <Switch
+                            android:id="@+id/switchNotifications"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:thumbTint="@color/switch_thumb_color"
+                            android:trackTint="@color/switch_track_color" />
+
+                    </LinearLayout>
+
+                    <!-- Sync with Wearables -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sync with"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Wearables"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <Switch
+                            android:id="@+id/switchWearables"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:thumbTint="@color/switch_thumb_color"
+                            android:trackTint="@color/switch_track_color" />
+                    </LinearLayout>
+
+                    <!-- Logout Option -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="end|center_vertical"
+                        android:paddingTop="20dp">
+
+                        <ImageView
+                            android:id="@+id/logoutIcon"
+                            android:layout_width="22dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="5dp"
+                            android:src="@drawable/ic_logout"
+                            android:tint="#6B8699" />
+                        <TextView
+                            android:id="@+id/logoutText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="2dp"
+                            android:text="Logout"
+                            android:textColor="#6B8699"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="#1E1E2C"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/navHome"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="#2A2A42"
+            android:backgroundTint="#1E1E2C"
+            android:padding="4dp"
+            android:src="@drawable/ic_home"
+            app:tint="#777777" />
+
+        <ImageView
+            android:id="@+id/navLocation"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:padding="4dp"
+            android:src="@drawable/ic_location"
+            app:tint="#777777" />
+
+        <ImageView
+            android:id="@+id/navProfile"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:padding="4dp"
+            android:src="@drawable/ic_profile"
+            app:tint="#76FF03" />
+
+        <ImageView
+            android:id="@+id/navScan"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:padding="4dp"
+            android:src="@drawable/ic_scan"
+            app:tint="#777777" />
+
+        <ImageView
+            android:id="@+id/navSetting"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:padding="4dp"
+            android:src="@drawable/ic_settings"
+            app:tint="#777777" />
+    </LinearLayout>
+
+</RelativeLayout>

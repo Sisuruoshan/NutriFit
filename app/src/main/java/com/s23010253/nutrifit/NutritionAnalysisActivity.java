@@ -4,6 +4,7 @@ package com.s23010253.nutrifit;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,12 +41,24 @@ public class NutritionAnalysisActivity extends AppCompatActivity {
     private String currentFood;
     private int currentServingSize = 100;
 
+    private ImageView navHome, navLocation, navProfile, navScan, navSetting;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nutrition_analysis);
 
+        // Enable immersive full screen mode
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+
         initializeViews();
+        initializeBottomNavigation();
         initializeNutritionDatabase();
         setupClickListeners();
 
@@ -54,6 +73,13 @@ public class NutritionAnalysisActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
             if (bitmap != null) {
                 foodImageView.setImageBitmap(bitmap);
+            }
+        } else {
+            // If no image, try to set a relevant image based on food name (manual entry)
+            String foodImageName = intent.getStringExtra("food_image_name");
+            if (foodImageName != null) {
+                // Fetch from Unsplash API
+                fetchFoodImageFromUnsplash(foodImageName);
             }
         }
 
@@ -72,6 +98,50 @@ public class NutritionAnalysisActivity extends AppCompatActivity {
         carbsValue = findViewById(R.id.carbsValue);
         addToDailyLogButton = findViewById(R.id.addToDailyLogButton);
         foodImageView = findViewById(R.id.foodImageView);
+    }
+
+    private void initializeBottomNavigation() {
+        navHome = findViewById(R.id.navHome);
+        navLocation = findViewById(R.id.navLocation);
+        navProfile = findViewById(R.id.navProfile);
+        navScan = findViewById(R.id.navScan);
+        navSetting = findViewById(R.id.navSetting);
+
+        navHome.setOnClickListener(v -> navigateToHome());
+        navLocation.setOnClickListener(v -> navigateToLocations());
+        navProfile.setOnClickListener(v -> navigateToProfile());
+        navScan.setOnClickListener(v -> navigateToScan());
+        navSetting.setOnClickListener(v -> navigateToSetting());
+    }
+
+    private void navigateToHome() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    private void navigateToLocations() {
+        Intent intent = new Intent(this, FitMapActivity.class);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    private void navigateToProfile() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    private void navigateToScan() {
+        Intent intent = new Intent(this, ScanActivity.class);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    private void navigateToSetting() {
+        Intent intent = new Intent(this, ProfileSetupActivity.class);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 
     private void initializeNutritionDatabase() {
@@ -183,6 +253,7 @@ public class NutritionAnalysisActivity extends AppCompatActivity {
         nutritionDatabase.put("Halloumi", new FoodNutrition(321, 22, 26, 2.2));
         nutritionDatabase.put("Mascarpone", new FoodNutrition(429, 7, 44, 4));
         nutritionDatabase.put("Cream Cheese", new FoodNutrition(342, 6, 34, 4));
+        nutritionDatabase.put("Roast Chicken", new FoodNutrition(177, 27.3, 7.7, 0)); // per 100g
     }
 
     private void setupClickListeners() {
@@ -218,30 +289,10 @@ public class NutritionAnalysisActivity extends AppCompatActivity {
         confidenceText.setText(confidence + "% confidence match");
 
         // Set food image placeholder
-        setFoodImage(foodName);
+        // Removed setFoodImage call
 
         // Display nutrition information
         updateNutritionValues(foodName);
-    }
-
-    private void setFoodImage(String foodName) {
-        // In a real app, you would load actual food images
-        // For now, we'll use a placeholder or set different backgrounds
-        switch (foodName.toLowerCase()) {
-            case "grilled chicken breast":
-            case "chicken":
-                foodImageView.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
-                break;
-            case "apple":
-                foodImageView.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
-                break;
-            case "banana":
-                foodImageView.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
-                break;
-            default:
-                foodImageView.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
-                break;
-        }
     }
 
     private void updateNutritionValues(String foodName) {
@@ -255,7 +306,14 @@ public class NutritionAnalysisActivity extends AppCompatActivity {
             servingSizeInput.setText("100g");
         }
 
-        FoodNutrition nutrition = nutritionDatabase.get(foodName);
+        // Make food name lookup case-insensitive
+        FoodNutrition nutrition = null;
+        for (String key : nutritionDatabase.keySet()) {
+            if (key.equalsIgnoreCase(foodName)) {
+                nutrition = nutritionDatabase.get(key);
+                break;
+            }
+        }
         if (nutrition != null) {
             // Calculate nutrition based on serving size
             double multiplier = currentServingSize / 100.0;
@@ -282,6 +340,18 @@ public class NutritionAnalysisActivity extends AppCompatActivity {
         // Simulate adding to daily log
         Toast.makeText(this, currentFood + " added to your daily log!", Toast.LENGTH_SHORT).show();
 
+        // Save calories to SharedPreferences (accumulate for today)
+        int caloriesToAdd = 0;
+        try {
+            caloriesToAdd = Integer.parseInt(caloriesValue.getText().toString());
+        } catch (Exception ignored) {}
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault());
+        String today = sdf.format(new java.util.Date());
+        android.content.SharedPreferences prefs = getSharedPreferences("daily_log", MODE_PRIVATE);
+        int totalCalories = prefs.getInt("calories_" + today, 0);
+        totalCalories += caloriesToAdd;
+        prefs.edit().putInt("calories_" + today, totalCalories).apply();
+
         // In a real app, you would save this to a database or send to a server
         // For now, we'll just go back to the main screen
         finish();
@@ -289,11 +359,10 @@ public class NutritionAnalysisActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        // Return to main activity
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent intent = new Intent(NutritionAnalysisActivity.this, ScanActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
+        finish();
     }
 
     // Inner class to represent food nutrition data
@@ -308,6 +377,75 @@ public class NutritionAnalysisActivity extends AppCompatActivity {
             this.protein = protein;
             this.fat = fat;
             this.carbs = carbs;
+        }
+    }
+
+    // Add this helper method at the end of the class
+    private int getFoodImageResId(String foodName) {
+        // No food images available, always return 0
+        return 0;
+    }
+
+    // Fetch food image from Unsplash API
+    private void fetchFoodImageFromUnsplash(String foodName) {
+        final String ACCESS_KEY = "ZQpNGEfSLswbi9wyt1qcalWaLyPdTgsnyexdW3hZUoQ"; // Unsplash Access Key
+        final String url = "https://api.unsplash.com/search/photos?query=" + foodName + "&client_id=" + ACCESS_KEY + "&orientation=squarish&per_page=1";
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                try {
+                    HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.connect();
+                    int responseCode = connection.getResponseCode();
+                    if (responseCode == 200) {
+                        InputStream is = connection.getInputStream();
+                        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+                        String response = s.hasNext() ? s.next() : "";
+                        JSONObject json = new JSONObject(response);
+                        JSONArray results = json.optJSONArray("results");
+                        if (results != null && results.length() > 0) {
+                            JSONObject first = results.getJSONObject(0);
+                            JSONObject urls = first.getJSONObject("urls");
+                            return urls.getString("regular");
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(String imageUrl) {
+                if (imageUrl != null) {
+                    new DownloadImageTask(foodImageView).execute(imageUrl);
+                }
+            }
+        }.execute();
+    }
+
+    // Helper AsyncTask to download image from URL
+    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView imageView;
+        DownloadImageTask(ImageView imageView) {
+            this.imageView = imageView;
+        }
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            String urlDisplay = urls[0];
+            try {
+                InputStream in = new java.net.URL(urlDisplay).openStream();
+                return BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            if (result != null) {
+                imageView.setImageBitmap(result);
+            }
         }
     }
 }
